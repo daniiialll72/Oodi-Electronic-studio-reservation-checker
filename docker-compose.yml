@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  oodi-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oodi-reservation-monitor
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Telegram settings (optional)
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+      
+      # Email settings (optional)
+      - EMAIL_SMTP_SERVER=${EMAIL_SMTP_SERVER:-}
+      - EMAIL_SMTP_PORT=${EMAIL_SMTP_PORT:-}
+      - EMAIL_USERNAME=${EMAIL_USERNAME:-}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD:-}
+      - EMAIL_TO=${EMAIL_TO:-}
+      
+      # Monitoring settings
+      - MONITOR_INTERVAL=${MONITOR_INTERVAL:-5}
+      - MONITOR_DATE=${MONITOR_DATE:-}
+    # Entrypoint script handles building the command from environment variables
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
